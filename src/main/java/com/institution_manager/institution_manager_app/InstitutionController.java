@@ -11,6 +11,7 @@ public class InstitutionController
     @RequestMapping("/home")
     public String createInstitution()
     {
+
         return "Heyyy theree, you have created an instituiton named Yale uni! yaaahhh!! lets get it";
     }
 
