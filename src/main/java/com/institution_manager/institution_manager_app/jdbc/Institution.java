@@ -15,6 +15,9 @@ public class Institution
 
     private int studentCount;
 
+    public Institution() {
+    }
+
     public Institution(String name, String president, int staffCount, int studentCount) {
         this.name = name;
         this.president = president;
@@ -51,25 +54,9 @@ public class Institution
     }
 
 
-
     public String getName() {
         return name;
     }
-
-
-
-    public String addCourseToInstitution(String courseName){
-
-        return "You have added " + courseName + "to the institution";
-
-    }
-
-
-
-
-
-
-
 
 
 }

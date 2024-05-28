@@ -1,18 +1,31 @@
 package com.institution_manager.institution_manager_app;
 
+import com.institution_manager.institution_manager_app.jdbc.Institution;
+import com.institution_manager.institution_manager_app.jdbc.InstitutionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class InstitutionController
 {
 
+    @Autowired
+    private InstitutionRepository repo;
+
     //add a new institution - create(POST)
-    @RequestMapping("/home")
-    public String createInstitution()
+    @RequestMapping("/institutions")
+    public List<Institution> getInstitutions()
     {
 
-        return "Heyyy theree, you have created an instituiton named Yale uni! yaaahhh!! lets get it";
+        System.out.println("get institutions called!!");
+
+        return repo.getAllInstitutions();
+
+
+
     }
 
     // get all institutions - read(GET)
