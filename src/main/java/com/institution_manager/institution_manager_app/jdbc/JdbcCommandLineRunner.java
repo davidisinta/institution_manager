@@ -15,6 +15,7 @@ public class JdbcCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception
     {
         repo.addInstitution(new Institution("Yale", "Salovey", 3003, 12889));
+        repo.addInstitution(new Institution("Bush", "Pozee", 302, 2000));
 
     }
 }

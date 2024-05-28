@@ -25,6 +25,11 @@ public class InstitutionRepository
     private String GET_ALL_INSTITUTIONS_QUERY = """
             SELECT * FROM INSTITUTIONS
             """;
+
+    private String GET_INSTITUTION_BY_ID_QUERY = """
+            SELECT * FROM INSTITUTIONS
+            WHERE id = ?
+            """;
     public void addInstitution(Institution institution)
     {
         System.out.println("institution added");
@@ -38,5 +43,11 @@ public class InstitutionRepository
     {
        return springJdbcTemplate.query(GET_ALL_INSTITUTIONS_QUERY,new BeanPropertyRowMapper<>(Institution.class));
 
+    }
+
+    public Institution getInstitution(int id)
+    {
+        return springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_ID_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class),id);
     }
 }
