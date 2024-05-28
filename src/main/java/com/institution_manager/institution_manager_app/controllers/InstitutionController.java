@@ -1,4 +1,4 @@
-package com.institution_manager.institution_manager_app;
+package com.institution_manager.institution_manager_app.controllers;
 
 import com.institution_manager.institution_manager_app.jdbc.Institution;
 import com.institution_manager.institution_manager_app.jdbc.InstitutionRepository;
@@ -19,12 +19,8 @@ public class InstitutionController
     @RequestMapping("/institutions")
     public List<Institution> getInstitutions()
     {
-
         System.out.println("get institutions called!!");
-
         return repo.getAllInstitutions();
-
-
 
     }
 

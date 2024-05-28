@@ -1,10 +1,5 @@
 package com.institution_manager.institution_manager_app.jdbc;
 
-import com.institution_manager.institution_manager_app.Course;
-import com.institution_manager.institution_manager_app.Student;
-
-import java.util.ArrayList;
-
 
 public class Institution
 {
