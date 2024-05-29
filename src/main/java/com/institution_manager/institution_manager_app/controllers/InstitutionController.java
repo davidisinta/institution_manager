@@ -117,8 +117,20 @@ public class InstitutionController
         //come back and check if there is an institution with the new name you want to assign first
         // before performing the edit
 
+
         try {
             Optional<Institution> existingInstitution = repo.getInstitution(id);
+
+            Optional<Institution> otherInstitutionWithGivenName = repo.searchInstitution(updatedInstitution.getName());
+
+            if(otherInstitutionWithGivenName.isPresent())
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
+                        "The institution with name " + updatedInstitution.getName() + " Already Exists." +
+                        "You cant change the name of an institution to that of an existing institution");
+
+            }
+
 
             if (existingInstitution.isPresent()) {
 
