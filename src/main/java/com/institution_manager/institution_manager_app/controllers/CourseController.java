@@ -140,7 +140,7 @@ public class CourseController
         // been assigned to atleast one student before editing
 
         try {
-            Optional<Course> existingCourse = repo.getCourseById();
+            Optional<Course> existingCourse = repo.getCourseById(id);
 
             Optional<Course> otherInstitutionWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
 

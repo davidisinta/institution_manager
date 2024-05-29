@@ -14,6 +14,7 @@ public class CourseRepository {
 
 
 
+
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -79,6 +80,17 @@ WHERE c.courseName = ?  AND i.institution_id = ?;
     private static final String DELETE_COURSE_QUERY = """
 DELETE FROM Course
     WHERE CourseId = ?
+""";
+
+    private static final String GET_ALL_COURSE_BY_ID_QUERY = """
+    SELECT * FROM Course
+    WHERE CourseId = ?;
+""";
+
+    private static final String UPDATE_COURSE_QUERY =
+            """
+UPDATE Course SET CourseName = ? WHERE institution_id = ?
+
 """;
 
 
@@ -185,5 +197,24 @@ DELETE FROM Course
     public void deleteById(int id)
     {
         springJdbcTemplate.update(DELETE_COURSE_QUERY, id);
+    }
+
+    public Optional<Course> getCourseById(int id) {
+        try {
+            Course course = springJdbcTemplate.queryForObject(
+                    GET_ALL_COURSE_BY_ID_QUERY,
+                    new BeanPropertyRowMapper<>(Course.class),
+                    id
+            );
+            return Optional.ofNullable(course);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void updateCourse(int id, Course updatedCourse)
+    {
+        String newName = updatedCourse.getCourseName();
+        springJdbcTemplate.update(UPDATE_COURSE_QUERY, newName, id);
     }
 }
