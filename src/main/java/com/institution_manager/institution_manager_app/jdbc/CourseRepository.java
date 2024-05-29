@@ -103,7 +103,7 @@ SELECT * FROM Course
         System.out.println("Course id is: " + courseId);
         System.out.println("Institution id is: " + institutionId);
 
-        springJdbcTemplate.update(ADD_COURSE_TO_INSTITUTION_QUERY,courseId, institutionId);
+        springJdbcTemplate.update(ADD_COURSE_TO_INSTITUTION_QUERY, institutionId, courseId);
 
     }
 
