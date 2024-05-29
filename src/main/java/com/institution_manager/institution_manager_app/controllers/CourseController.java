@@ -130,6 +130,6 @@ public class CourseController
 
 
     // edit name of a course - do not edit a course that has been assigned to atleast one student
-    //    // show relevant errors if user tries to delete a course that has students assigned
+    // show relevant errors if user tries to delete a course that has students assigned
 
 }
