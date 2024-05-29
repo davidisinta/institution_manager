@@ -2,6 +2,7 @@ package com.institution_manager.institution_manager_app.controllers;
 
 import com.institution_manager.institution_manager_app.jdbc.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -113,6 +114,19 @@ public class CourseController
 
     // Delete a course - do not delete a course that has been assigned to atleast one student
     // show relevant errors if user tries to delete a course that has students assigned
+    @DeleteMapping("/courses/{id}")
+    public ResponseEntity<?> deleteInstitution(@PathVariable int id)
+    {
+        //come back and check if course has a student before deleting
+
+        System.out.println("Delete course called!!");
+        try {
+            repo.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     // edit name of a course - do not edit a course that has been assigned to atleast one student

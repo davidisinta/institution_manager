@@ -76,6 +76,11 @@ WHERE c.courseName = ?  AND i.institution_id = ?;
             ORDER BY courseName DESC;   
 """;
 
+    private static final String DELETE_COURSE_QUERY = """
+DELETE FROM Course
+    WHERE CourseId = ?
+""";
+
 
 
     public void createCourse(Course course)
@@ -175,5 +180,10 @@ WHERE c.courseName = ?  AND i.institution_id = ?;
 
         return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
 
+    }
+
+    public void deleteById(int id)
+    {
+        springJdbcTemplate.update(DELETE_COURSE_QUERY, id);
     }
 }
