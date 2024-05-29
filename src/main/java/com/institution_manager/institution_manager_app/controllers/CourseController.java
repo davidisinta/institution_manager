@@ -96,6 +96,19 @@ public class CourseController
 
 
     // sort the courses by name in ascending and descending order
+    @GetMapping("/institutions/{id}/courses/sort/ascend")
+    public Optional<List<Course>> sortCoursesAscending(@PathVariable int id)
+    {
+        System.out.println("sorting institutions by ascending order!!");
+        return repo.getCoursesAscending(id);
+    }
+
+    @GetMapping("/institutions/{id}/courses/sort/descend")
+    public Optional<List<Course>> sortCoursesDescending(@PathVariable int id)
+    {
+        System.out.println("sorting institutions by descending order!!");
+        return repo.getCoursesDescending(id);
+    }
 
 
     // Delete a course - do not delete a course that has been assigned to atleast one student

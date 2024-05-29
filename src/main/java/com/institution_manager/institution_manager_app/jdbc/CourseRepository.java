@@ -13,6 +13,7 @@ import java.util.Optional;
 public class CourseRepository {
 
 
+
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -56,6 +57,23 @@ FROM Course c
 JOIN InstitutionCourse ic ON c.courseId = ic.courseId
 JOIN Institution i ON ic.institution_id = i.institution_id
 WHERE c.courseName = ?  AND i.institution_id = ?;
+""";
+
+    private static final String GET_ALL_COURSES_ASCENDING_QUERY = """
+            SELECT Course.courseId, Course.courseName
+            FROM Course
+            JOIN InstitutionCourse ON Course.courseId = InstitutionCourse.courseId
+            WHERE InstitutionCourse.institution_id = ?
+            ORDER BY courseName ASC;   
+
+""";
+
+    private static final String GET_ALL_COURSES_DESCENDING_QUERY = """
+            SELECT Course.courseId, Course.courseName
+            FROM Course
+            JOIN InstitutionCourse ON Course.courseId = InstitutionCourse.courseId
+            WHERE InstitutionCourse.institution_id = ?
+            ORDER BY courseName DESC;   
 """;
 
 
@@ -130,6 +148,29 @@ WHERE c.courseName = ?  AND i.institution_id = ?;
                 FILTER_INSTITUTIONS_COURSES_QUERY,
                 new BeanPropertyRowMapper<>(Course.class),
                  courseName, id
+        );
+
+        return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
+
+    }
+
+    public Optional<List<Course>> getCoursesAscending(int id)
+    {
+        List<Course> courses = springJdbcTemplate.query(
+                GET_ALL_COURSES_ASCENDING_QUERY,
+                new BeanPropertyRowMapper<>(Course.class),id
+        );
+
+        return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
+
+
+    }
+
+    public Optional<List<Course>> getCoursesDescending(int id)
+    {
+        List<Course> courses = springJdbcTemplate.query(
+                GET_ALL_COURSES_DESCENDING_QUERY,
+                new BeanPropertyRowMapper<>(Course.class),id
         );
 
         return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
