@@ -17,29 +17,29 @@ public class InstitutionRepository
 
 
     private String ADD_INSTITUTION_QUERY = """
-            INSERT INTO institutions (name, president, staffCount, studentCount)
+            INSERT INTO Institution (name, president, staffCount, studentCount)
             VALUES ( ?, ? , ?,  ?);
                         
             """;
 
 
     private String GET_ALL_INSTITUTIONS_QUERY = """
-            SELECT * FROM INSTITUTIONS
+            SELECT * FROM INSTITUTION
             """;
 
     private String GET_INSTITUTION_BY_ID_QUERY = """
-            SELECT * FROM INSTITUTIONS
-            WHERE id = ?
+            SELECT * FROM INSTITUTION
+            WHERE institution_id = ?
             """;
 
     private String CREATE_INSTITUTION_QUERY = """
-            INSERT INTO institutions (name, president, staffCount, studentCount)
+            INSERT INTO Institution (name, president, staffCount, studentCount)
             VALUES (?, ?, ?, ?);          
             """;
 
 
     private static final String GET_INSTITUTION_BY_NAME_QUERY = """
-            SELECT * FROM institutions WHERE name = ? ;
+            SELECT * FROM Institution WHERE name = ? ;
             """;
     public void addInstitution(Institution institution)
     {
@@ -68,10 +68,10 @@ public class InstitutionRepository
                 institution.getPresident(), institution.getStaffCount(), institution.getStudentCount());
     }
 
-    public Institution searchInstitution(String name)
+    public Optional<Institution> searchInstitution(String name)
     {
-        return springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_NAME_QUERY,
-                new BeanPropertyRowMapper<>(Institution.class),name);
+        return Optional.ofNullable(springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_NAME_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class), name));
 
     }
 }

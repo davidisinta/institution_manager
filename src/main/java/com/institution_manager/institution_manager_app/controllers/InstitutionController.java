@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,13 +25,27 @@ public class InstitutionController
     public ResponseEntity<?> createInstitution(@RequestBody Institution institution)
     {
 
-        //query db to check if Institution already exists
 
+        try{
+            //query db to check if Institution already exists
+            String currentInstitutionName = institution.getName();
 
+            Optional<Institution> existingInstitution = repo.searchInstitution(currentInstitutionName);
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
+                    "The institution with name " + currentInstitutionName + " Already Exists");
+
+        }
+        catch(Exception ex)
+        {
         // if it does not exist, create it
         repo.createInstitution(institution);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    }
+
+
     }
 
 
@@ -65,7 +78,7 @@ public class InstitutionController
 
     //search for an institution from list of institutions - READ(GET)
     @GetMapping("/institution/{name}")
-    public Institution searchInstitutionByName(@PathVariable String name)
+    public Optional<Institution> searchInstitutionByName(@PathVariable String name)
     {
         System.out.println("search institution by name called!!");
         return repo.searchInstitution(name);
