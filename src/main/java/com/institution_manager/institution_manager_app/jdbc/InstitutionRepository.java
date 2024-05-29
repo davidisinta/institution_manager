@@ -7,10 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class InstitutionRepository
 {
+
 
     @Autowired
     private JdbcTemplate springJdbcTemplate;
@@ -39,8 +41,14 @@ public class InstitutionRepository
 
 
     private static final String GET_INSTITUTION_BY_NAME_QUERY = """
-            SELECT * FROM Institution WHERE name LIKE '%?%';
+            SELECT * FROM Institution WHERE name LIKE CONCAT('%', ?, '%');
             """;
+
+
+    private static final String DELETE_INSTITUTION_QUERY = """
+    DELETE FROM Institution
+    WHERE institution_id = ?
+""";
 
     public void addInstitution(Institution institution)
     {
@@ -69,10 +77,24 @@ public class InstitutionRepository
                 institution.getPresident(), institution.getStaffCount(), institution.getStudentCount());
     }
 
-    public Optional<Institution> searchInstitution(String name)
+    public List<Optional<Institution>> searchInstitution(String name) {
+        List<Institution> institutions = springJdbcTemplate.query(
+                GET_INSTITUTION_BY_NAME_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class),
+                name
+        );
+
+
+        List<Optional<Institution>> optionalInstitutions = institutions.stream()
+                .map(Optional::ofNullable)
+                .collect(Collectors.toList());
+
+        return optionalInstitutions;
+    }
+
+    public void deleteById(int id)
     {
-        return Optional.ofNullable(springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_NAME_QUERY,
-                new BeanPropertyRowMapper<>(Institution.class), name));
+        springJdbcTemplate.update(DELETE_INSTITUTION_QUERY, id);
 
     }
 }

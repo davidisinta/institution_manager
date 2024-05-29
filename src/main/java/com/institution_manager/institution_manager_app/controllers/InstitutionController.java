@@ -30,7 +30,7 @@ public class InstitutionController
             //query db to check if Institution already exists
             String currentInstitutionName = institution.getName();
 
-            Optional<Institution> existingInstitution = repo.searchInstitution(currentInstitutionName);
+            List<Optional<Institution>> existingInstitution = repo.searchInstitution(currentInstitutionName);
 
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
                     "The institution with name " + currentInstitutionName + " Already Exists");
@@ -78,7 +78,7 @@ public class InstitutionController
 
     //search for an institution from list of institutions - READ(GET)
     @GetMapping("/institution/{name}")
-    public Optional<Institution> searchInstitutionByName(@PathVariable String name)
+    public List<Optional<Institution>> searchInstitutionByName(@PathVariable String name)
     {
         System.out.println("search institution by name called!!");
         return repo.searchInstitution(name);
@@ -89,6 +89,17 @@ public class InstitutionController
 
 
     // delete an institution - Delete("/institutions/id")
+    @DeleteMapping("/deleteInstitution/{id}")
+    public ResponseEntity<?> deleteInstitution(@PathVariable int id) {
+
+        System.out.println("Delete institution called!!");
+        try {
+            repo.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     // edit name of institution - update(PATCH)
