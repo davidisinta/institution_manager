@@ -97,4 +97,9 @@ public class InstitutionRepository
         springJdbcTemplate.update(DELETE_INSTITUTION_QUERY, id);
 
     }
+
+    public void save(Institution institution)
+    {
+        //updates an existing institution with new data
+    }
 }
