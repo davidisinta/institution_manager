@@ -3,10 +3,9 @@ package com.institution_manager.institution_manager_app.controllers;
 import com.institution_manager.institution_manager_app.jdbc.Institution;
 import com.institution_manager.institution_manager_app.jdbc.InstitutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +17,17 @@ public class InstitutionController
     private InstitutionRepository repo;
 
     //add a new institution - create(POST)
+    @PostMapping("/institution/create")
+    public ResponseEntity<?> createInstitution(@RequestBody Institution institution)
+    {
+
+        //query db to check if Institution already exists
+
+        // if it does not exist, create it
+        repo.createInstitution(institution);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
 
     // get all institutions - read(GET)
