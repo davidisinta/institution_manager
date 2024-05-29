@@ -39,11 +39,12 @@ public class InstitutionRepository
 
 
     private static final String GET_INSTITUTION_BY_NAME_QUERY = """
-            SELECT * FROM Institution WHERE name = ? ;
+            SELECT * FROM Institution WHERE name LIKE '%?%';
             """;
+
     public void addInstitution(Institution institution)
     {
-        System.out.println("institution added");
+        System.out.println("institution " + institution.getName() + " added");
 
         springJdbcTemplate.update(ADD_INSTITUTION_QUERY, institution.getName(),
                 institution.getPresident(), institution.getStaffCount(), institution.getStudentCount());
