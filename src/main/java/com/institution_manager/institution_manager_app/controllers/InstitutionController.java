@@ -60,7 +60,7 @@ public class InstitutionController
 
 
     //get institution by id
-    @GetMapping("institutions/{id}")
+    @GetMapping("institutions/id/{id}")
     public ResponseEntity<?> getInstitutionById(@PathVariable int id) {
         try {
             Optional<Institution> institution = repo.getInstitution(id);
@@ -77,7 +77,7 @@ public class InstitutionController
 
 
     //search for an institution from list of institutions - READ(GET)
-    @GetMapping("/institution/{name}")
+    @GetMapping("/institutions/name/{name}")
     public List<Optional<Institution>> searchInstitutionByName(@PathVariable String name)
     {
         System.out.println("search institution by name called!!");
@@ -89,7 +89,7 @@ public class InstitutionController
 
 
     // delete an institution - Delete("/institutions/id")
-    @DeleteMapping("/deleteInstitution/{id}")
+    @DeleteMapping("/institutions/{id}")
     public ResponseEntity<?> deleteInstitution(@PathVariable int id)
     {
         //come back and check if institution has a course before deleting
@@ -105,7 +105,7 @@ public class InstitutionController
 
 
     // edit name of institution - update(PATCH)
-    @PatchMapping("/updateInstitution/{id}")
+    @PatchMapping("/institutions/{id}")
     public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
     {
         //come back and check if there is an institution with the new name you want to assign first
