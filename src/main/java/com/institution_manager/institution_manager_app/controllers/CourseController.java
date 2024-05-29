@@ -85,6 +85,14 @@ public class CourseController
 
     // filter courses by searching. Be able to change the institution and have the list
     // of courses change to reflect this
+    @PostMapping("/courses/institutions/{id}")
+    public Optional<List<Course>> filterInstitutionsCourses(@PathVariable int id, @RequestBody Course course)
+    {
+        System.out.println("filtering an institutions courses by name");
+
+        return repo.filterInstitutionsCoursesByName(id,course.getCourseName());
+
+    }
 
 
     // sort the courses by name in ascending and descending order

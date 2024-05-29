@@ -13,7 +13,6 @@ import java.util.Optional;
 public class CourseRepository {
 
 
-
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -50,6 +49,14 @@ SELECT * FROM Course
             JOIN InstitutionCourse ON Course.courseId = InstitutionCourse.courseId
             WHERE InstitutionCourse.institution_id = ?;          
             """;
+
+    private static final String FILTER_INSTITUTIONS_COURSES_QUERY = """
+SELECT c.courseId, c.courseName
+FROM Course c
+JOIN InstitutionCourse ic ON c.courseId = ic.courseId
+JOIN Institution i ON ic.institution_id = i.institution_id
+WHERE c.courseName = ?  AND i.institution_id = ?;
+""";
 
 
 
@@ -115,5 +122,17 @@ SELECT * FROM Course
         );
 
         return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
+    }
+
+    public Optional<List<Course>> filterInstitutionsCoursesByName(int id, String courseName)
+    {
+        List<Course> courses = springJdbcTemplate.query(
+                FILTER_INSTITUTIONS_COURSES_QUERY,
+                new BeanPropertyRowMapper<>(Course.class),
+                 courseName, id
+        );
+
+        return courses.isEmpty() ? Optional.empty() : Optional.of(courses);
+
     }
 }
