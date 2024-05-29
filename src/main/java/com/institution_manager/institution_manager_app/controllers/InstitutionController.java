@@ -31,7 +31,7 @@ public class InstitutionController
 
 
     // get all institutions - read(GET)
-    @RequestMapping("/institutions")
+    @GetMapping("/institutions")
     public List<Institution> getInstitutions()
     {
         System.out.println("get institutions called!!");
@@ -40,13 +40,20 @@ public class InstitutionController
     }
 
 
-    //search for an institution from list of institutions - READ(GET)
-
+    //get institution by id
     @GetMapping("institutions/{id}")
     public Institution getInstitutionById(@PathVariable int id)
     {
         System.out.println("get institution by id called!!");
         return repo.getInstitution(id);
+    }
+
+    //search for an institution from list of institutions - READ(GET)
+    @GetMapping("/institution/{name}")
+    public Institution searchInstitutionByName(@PathVariable String name)
+    {
+        System.out.println("search institution by name called!!");
+        return repo.searchInstitution(name);
     }
 
 

@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public class InstitutionRepository
 {
+
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -33,6 +34,11 @@ public class InstitutionRepository
     private String CREATE_INSTITUTION_QUERY = """
             INSERT INTO institutions (name, president, staffCount, studentCount)
             VALUES (?, ?, ?, ?);          
+            """;
+
+
+    private static final String GET_INSTITUTION_BY_NAME_QUERY = """
+            SELECT * FROM institutions WHERE name = ? ;
             """;
     public void addInstitution(Institution institution)
     {
@@ -59,5 +65,12 @@ public class InstitutionRepository
     {
         springJdbcTemplate.update(CREATE_INSTITUTION_QUERY, institution.getName(),
                 institution.getPresident(), institution.getStaffCount(), institution.getStudentCount());
+    }
+
+    public Institution searchInstitution(String name)
+    {
+        return springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_NAME_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class),name);
+
     }
 }
