@@ -105,29 +105,20 @@ public class InstitutionController
 
 
     // edit name of institution - update(PATCH)
-    @PatchMapping("/{id}")
+    @PatchMapping("/updateInstitution/{id}")
     public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
     {
-
         //come back and check if there is an institution with the new name you want to assign first
         // before performing the edit
-
 
         try {
             Optional<Institution> existingInstitution = repo.getInstitution(id);
 
             if (existingInstitution.isPresent()) {
-                Institution institution = existingInstitution.get();
 
-                // Update institution fields with the values from updatedInstitution
-                institution.setName(updatedInstitution.getName());
-                institution.setPresident(updatedInstitution.getPresident());
-                institution.setStaffCount(updatedInstitution.getStaffCount());
-                institution.setStudentCount(updatedInstitution.getStudentCount());
+                repo.update(id, updatedInstitution);
 
-                repo.save(institution);
-
-                return ResponseEntity.ok(institution);
+                return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.notFound().build();
             }

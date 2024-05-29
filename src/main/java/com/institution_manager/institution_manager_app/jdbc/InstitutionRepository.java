@@ -50,6 +50,8 @@ public class InstitutionRepository
     WHERE institution_id = ?
 """;
 
+    String UPDATE_INSTITUTION_QUERY = "UPDATE Institution SET name = ? WHERE institution_id = ?";
+
     public void addInstitution(Institution institution)
     {
         System.out.println("institution " + institution.getName() + " added");
@@ -98,8 +100,10 @@ public class InstitutionRepository
 
     }
 
-    public void save(Institution institution)
+    public void update(int id, Institution newInstitution)
     {
-        //updates an existing institution with new data
+        String newName = newInstitution.getName();
+        springJdbcTemplate.update(UPDATE_INSTITUTION_QUERY, newName, id);
+
     }
 }
