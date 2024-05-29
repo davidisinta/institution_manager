@@ -3,11 +3,16 @@ package com.institution_manager.institution_manager_app.controllers;
 import com.institution_manager.institution_manager_app.jdbc.Institution;
 import com.institution_manager.institution_manager_app.jdbc.InstitutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class InstitutionController
@@ -22,6 +27,7 @@ public class InstitutionController
     {
 
         //query db to check if Institution already exists
+
 
         // if it does not exist, create it
         repo.createInstitution(institution);
@@ -42,11 +48,20 @@ public class InstitutionController
 
     //get institution by id
     @GetMapping("institutions/{id}")
-    public Institution getInstitutionById(@PathVariable int id)
-    {
-        System.out.println("get institution by id called!!");
-        return repo.getInstitution(id);
+    public ResponseEntity<?> getInstitutionById(@PathVariable int id) {
+        try {
+            Optional<Institution> institution = repo.getInstitution(id);
+            return ResponseEntity.ok(institution.get());
+
+        } catch (EmptyResultDataAccessException ex) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+            errorResponse.put("message", "Institution with ID " + id + " not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
+
+
 
     //search for an institution from list of institutions - READ(GET)
     @GetMapping("/institution/{name}")

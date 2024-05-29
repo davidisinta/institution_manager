@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class InstitutionRepository
@@ -55,11 +56,11 @@ public class InstitutionRepository
 
     }
 
-    public Institution getInstitution(int id)
-    {
-        return springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_ID_QUERY,
-                new BeanPropertyRowMapper<>(Institution.class),id);
+    public Optional<Institution> getInstitution(int id) {
+        return Optional.ofNullable(springJdbcTemplate.queryForObject(GET_INSTITUTION_BY_ID_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class), id));
     }
+
 
     public void createInstitution(Institution institution)
     {
