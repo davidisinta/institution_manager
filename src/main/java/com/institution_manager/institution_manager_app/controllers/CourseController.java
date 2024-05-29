@@ -134,27 +134,27 @@ public class CourseController
     // show relevant errors if user tries to delete a course that has students assigned
 
     @PatchMapping("/courses/{id}")
-    public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
+    public ResponseEntity<?> updateCourse(@PathVariable int id, @RequestBody Course updatedCourse)
     {
-        //come back and check if there is a course that has been assigned to atleast one student before editing
+        //come back and check if there is a course that has
+        // been assigned to atleast one student before editing
 
         try {
-            Optional<Institution> existingInstitution = repo.getInstitution(id);
+            Optional<Course> existingCourse = repo.getCourseById();
 
-            Optional<Institution> otherInstitutionWithGivenName = repo.searchInstitution(updatedInstitution.getName());
+            Optional<Course> otherInstitutionWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
 
             if(otherInstitutionWithGivenName.isPresent())
             {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
-                        "The institution with name " + updatedInstitution.getName() + " Already Exists." +
-                        "You cant change the name of an institution to that of an existing institution");
+                        "The course with name " + updatedCourse.getCourseName() + " Already Exists."
+                      );
 
             }
 
+            if (existingCourse.isPresent()) {
 
-            if (existingInstitution.isPresent()) {
-
-                repo.update(id, updatedInstitution);
+                repo.updateCourse(id, updatedCourse);
 
                 return ResponseEntity.ok().build();
             } else {
