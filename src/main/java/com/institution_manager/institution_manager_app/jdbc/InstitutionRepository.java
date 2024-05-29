@@ -14,6 +14,7 @@ public class InstitutionRepository
 {
 
 
+
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -55,6 +56,20 @@ public class InstitutionRepository
 """;
 
     String UPDATE_INSTITUTION_QUERY = "UPDATE Institution SET name = ? WHERE institution_id = ?";
+
+
+
+    private static final String GET_ALL_INSTITUTIONS_ASCENDING = """
+SELECT * FROM INSTITUTION
+ORDER BY name ASC
+""";
+
+
+    private static final String GET_ALL_INSTITUTIONS_DESCENDING = """
+SELECT * FROM INSTITUTION
+ORDER BY name DESC
+
+""";
 
     public void addInstitution(Institution institution)
     {
@@ -128,4 +143,12 @@ public class InstitutionRepository
         }
     }
 
+    public List<Institution> getInstitutionsAscending() {
+        return springJdbcTemplate.query(GET_ALL_INSTITUTIONS_ASCENDING,new BeanPropertyRowMapper<>(Institution.class));
+    }
+
+    public List<Institution> getInstitutionsDescending()
+    {
+        return springJdbcTemplate.query(GET_ALL_INSTITUTIONS_DESCENDING,new BeanPropertyRowMapper<>(Institution.class));
+    }
 }

@@ -147,6 +147,20 @@ public class InstitutionController
 
 
     //sort list of institutions by name(ascending and descending) - read(GET)
+    @GetMapping("/institutions/sort/ascend")
+    public List<Institution> sortInstitutionsAscending()
+    {
+        System.out.println("sorting institutions by ascending order!!");
+        return repo.getInstitutionsAscending();
+    }
+
+    @GetMapping("/institutions/sort/descend")
+    public List<Institution> sortInstitutionsDescending()
+    {
+        System.out.println("sorting institutions by descending order!!");
+
+        return repo.getInstitutionsDescending();
+    }
 
 
 }
