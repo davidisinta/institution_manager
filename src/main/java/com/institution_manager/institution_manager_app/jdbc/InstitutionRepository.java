@@ -40,10 +40,14 @@ public class InstitutionRepository
             """;
 
 
-    private static final String GET_INSTITUTION_BY_NAME_QUERY = """
+    private static final String FILTER_INSTITUTION_BY_NAME_QUERY = """
             SELECT * FROM Institution WHERE name LIKE CONCAT('%', ?, '%');
             """;
 
+
+    private static final String SEARCH_INSTITUTION_BY_NAME_QUERY = """
+            SELECT * FROM Institution WHERE name = ?;
+            """;
 
     private static final String DELETE_INSTITUTION_QUERY = """
     DELETE FROM Institution
@@ -79,12 +83,14 @@ public class InstitutionRepository
                 institution.getPresident(), institution.getStaffCount(), institution.getStudentCount());
     }
 
-    public List<Optional<Institution>> searchInstitution(String name) {
+    public List<Optional<Institution>> filterInstitution(String name) {
         List<Institution> institutions = springJdbcTemplate.query(
-                GET_INSTITUTION_BY_NAME_QUERY,
+                FILTER_INSTITUTION_BY_NAME_QUERY,
                 new BeanPropertyRowMapper<>(Institution.class),
                 name
         );
+
+
 
 
         List<Optional<Institution>> optionalInstitutions = institutions.stream()
@@ -106,4 +112,20 @@ public class InstitutionRepository
         springJdbcTemplate.update(UPDATE_INSTITUTION_QUERY, newName, id);
 
     }
+
+
+    public Optional<Institution> searchInstitution(String name) {
+        List<Institution> institutions = springJdbcTemplate.query(
+                SEARCH_INSTITUTION_BY_NAME_QUERY,
+                new BeanPropertyRowMapper<>(Institution.class),
+                name
+        );
+
+        if (!institutions.isEmpty()) {
+            return Optional.of(institutions.get(0));
+        } else {
+            return Optional.empty();
+        }
+    }
+
 }
