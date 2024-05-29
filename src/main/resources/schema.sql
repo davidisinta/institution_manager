@@ -7,29 +7,29 @@ CREATE TABLE Institution (
 );
 
 CREATE TABLE Course (
-                        course_id INT PRIMARY KEY AUTO_INCREMENT,
-                        course_name VARCHAR(255) NOT NULL
+                        courseId INT PRIMARY KEY AUTO_INCREMENT,
+                        courseName VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Student (
-                         student_id INT PRIMARY KEY AUTO_INCREMENT,
-                         student_name VARCHAR(255) NOT NULL,
+                         studentId INT PRIMARY KEY AUTO_INCREMENT,
+                         studentName VARCHAR(255) NOT NULL,
                          institution_id INT,
                          FOREIGN KEY (institution_id) REFERENCES Institution(institution_id)
 );
 
 CREATE TABLE InstitutionCourse (
                                    institution_id INT,
-                                   course_id INT,
-                                   PRIMARY KEY (institution_id, course_id),
+                                   courseId INT,
+                                   PRIMARY KEY (institution_id, courseId),
                                    FOREIGN KEY (institution_id) REFERENCES Institution(institution_id),
-                                   FOREIGN KEY (course_id) REFERENCES Course(course_id)
+                                   FOREIGN KEY (courseId) REFERENCES Course(courseId)
 );
 
 CREATE TABLE Enrollment (
-                            enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
-                            student_id INT,
-                            course_id INT,
-                            FOREIGN KEY (student_id) REFERENCES Student(student_id),
-                            FOREIGN KEY (course_id) REFERENCES Course(course_id)
+                            enrollmentId INT PRIMARY KEY AUTO_INCREMENT,
+                            studentId INT,
+                            courseId INT,
+                            FOREIGN KEY (studentId) REFERENCES Student(studentId),
+                            FOREIGN KEY (courseId) REFERENCES Course(courseId)
 );
