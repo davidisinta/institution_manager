@@ -1,6 +1,7 @@
 package com.institution_manager.institution_manager_app.controllers;
 
 import com.institution_manager.institution_manager_app.jdbc.CourseRepository;
+import com.institution_manager.institution_manager_app.jdbc.Institution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -131,5 +132,38 @@ public class CourseController
 
     // edit name of a course - do not edit a course that has been assigned to atleast one student
     // show relevant errors if user tries to delete a course that has students assigned
+
+    @PatchMapping("/courses/{id}")
+    public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
+    {
+        //come back and check if there is a course that has been assigned to atleast one student before editing
+
+        try {
+            Optional<Institution> existingInstitution = repo.getInstitution(id);
+
+            Optional<Institution> otherInstitutionWithGivenName = repo.searchInstitution(updatedInstitution.getName());
+
+            if(otherInstitutionWithGivenName.isPresent())
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
+                        "The institution with name " + updatedInstitution.getName() + " Already Exists." +
+                        "You cant change the name of an institution to that of an existing institution");
+
+            }
+
+
+            if (existingInstitution.isPresent()) {
+
+                repo.update(id, updatedInstitution);
+
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
