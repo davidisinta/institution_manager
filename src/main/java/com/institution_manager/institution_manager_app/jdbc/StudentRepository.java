@@ -82,6 +82,10 @@ WHERE i.institution_id = ?
 
     String CHANGE_STUDENT_COURSE_QUERY = "UPDATE Enrollment SET courseId = ? WHERE studentId = ?";
 
+    String TRANSFER_STUDENT_QUERY = "UPDATE Student SET institution_id = ? WHERE studentId = ?";
+
+    String UPDATE_COURSE_QUERY = "UPDATE Enrollment SET courseId = ? WHERE studentId = ?";
+
 
 
     public Student createStudent(int id, Student student)
@@ -230,6 +234,53 @@ WHERE i.institution_id = ?
             e.printStackTrace();
             System.out.println("An error occurred while searching for the course: " + e.getMessage());
             return Optional.empty();
+        }
+    }
+
+    public void transferStudent(int studentId, int newInstitutionId, Course newCourse) {
+
+
+
+        try {
+
+            Optional<Student> currStudent = getStudentById(studentId);
+
+            if (currStudent.isPresent()) {
+
+                int studentRowsAffected = springJdbcTemplate.update(TRANSFER_STUDENT_QUERY, newInstitutionId, studentId);
+
+                if (studentRowsAffected > 0) {
+                    System.out.println("Student institution updated successfully for studentId: " + studentId);
+
+
+                    // CHECK IF COURSE EXISTS IN NEW INSTITUTION FIRST
+                    Optional<Course> validCourse = courseRepo.searchCourseByInstitution(newCourse.getCourseName(), newInstitutionId);
+
+                    if(validCourse.isPresent()){
+                        Course certifiedCourse = validCourse.get();
+
+                        // Update the courseId in the Enrollment table
+                        int enrollmentRowsAffected = springJdbcTemplate.update(UPDATE_COURSE_QUERY, certifiedCourse.getCourseId(), studentId);
+
+                        if (enrollmentRowsAffected > 0) {
+                            System.out.println("Enrollment updated successfully for studentId: " + studentId);
+                        } else {
+                            System.out.println("No enrollment found for studentId: " + studentId);
+                        }
+
+
+                    }
+
+
+                } else {
+                    System.out.println("No student found with studentId: " + studentId);
+                }
+            } else {
+                System.out.println("Student with ID " + studentId + " not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while transferring the student: " + e.getMessage());
         }
     }
 

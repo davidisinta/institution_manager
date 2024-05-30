@@ -154,6 +154,15 @@ public class StudentController
 
 
     //transfer student to another institution and assign them a course
+    @PostMapping("/transfer/students/{studentId}/institutions/{institutionId}")
+    public void transferStudent(@PathVariable("studentId") int studentId,
+                                @PathVariable("institutionId") int newInstitutionId,
+                                @RequestBody Course newCourse)
+    {
+        System.out.println("Transferring student to a new institution");
+
+        studentRepo.transferStudent(studentId, newInstitutionId, newCourse);
+    }
 
 
 
