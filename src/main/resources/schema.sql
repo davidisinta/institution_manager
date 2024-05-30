@@ -27,9 +27,9 @@ CREATE TABLE InstitutionCourse (
 );
 
 CREATE TABLE Enrollment (
-                            enrollmentId INT PRIMARY KEY AUTO_INCREMENT,
                             studentId INT,
                             courseId INT,
+                            PRIMARY KEY (studentId, courseId),
                             FOREIGN KEY (studentId) REFERENCES Student(studentId),
                             FOREIGN KEY (courseId) REFERENCES Course(courseId)
 );
