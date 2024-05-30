@@ -33,3 +33,11 @@ CREATE TABLE Enrollment (
                             FOREIGN KEY (studentId) REFERENCES Student(studentId),
                             FOREIGN KEY (courseId) REFERENCES Course(courseId)
 );
+
+CREATE TABLE StudentInstitution (
+                                    studentId INT,
+                                    institutionId INT,
+                                    PRIMARY KEY (studentId, institutionId),
+                                    FOREIGN KEY (studentId) REFERENCES Student(studentId),
+                                    FOREIGN KEY (institutionId) REFERENCES Institution(institution_id)
+);
