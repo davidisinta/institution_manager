@@ -125,9 +125,9 @@ public class CourseController
         Optional<List<Student>> potentialStudents = studentRepo.getCoursesStudents(id);
 
         if(potentialStudents.isPresent()){
-            System.out.println("Course not deleted because it has students");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Institution not " +
-                    "deleted because there is a course" +
+            System.out.println("Course not edited because it has students");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Course not " +
+                    "edited because there is a student" +
                     "assigned to it");
         }
 
@@ -159,28 +159,43 @@ public class CourseController
         //come back and check if there is a course that has
         // been assigned to atleast one student before editing
 
-        try {
-            Optional<Course> existingCourse = repo.getCourseById(id);
+        Optional<List<Student>> potentialStudents = studentRepo.getCoursesStudents(id);
 
-            Optional<Course> otherCourseWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
+        if(potentialStudents.isPresent()){
+            System.out.println("Course not edited because it has students");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Course not " +
+                    "edited because there is a student" +
+                    "assigned to it");
+        }
 
-            if(otherCourseWithGivenName.isPresent())
-            {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry! " +
-                        "The course with name " + updatedCourse.getCourseName() + " Already Exists.");
-            }
+        else{
+            try {
+                Optional<Course> existingCourse = repo.getCourseById(id);
 
-            if (existingCourse.isPresent()) {
+                Optional<Course> otherCourseWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
 
-                repo.updateCourse(id, updatedCourse);
+                if(otherCourseWithGivenName.isPresent())
+                {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry! " +
+                            "The course with name " + updatedCourse.getCourseName() + " Already Exists.");
+                }
 
-                return ResponseEntity.ok().build();
-            } else {
+                if (existingCourse.isPresent()) {
+
+                    repo.updateCourse(id, updatedCourse);
+
+                    return ResponseEntity.ok().build();
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } catch (EmptyResultDataAccessException ex) {
                 return ResponseEntity.notFound().build();
             }
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.notFound().build();
+
         }
+
+
+
     }
 
 
