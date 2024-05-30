@@ -142,14 +142,12 @@ public class CourseController
         try {
             Optional<Course> existingCourse = repo.getCourseById(id);
 
-            Optional<Course> otherInstitutionWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
+            Optional<Course> otherCourseWithGivenName = repo.searchCourse(updatedCourse.getCourseName());
 
-            if(otherInstitutionWithGivenName.isPresent())
+            if(otherCourseWithGivenName.isPresent())
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry!" +
-                        "The course with name " + updatedCourse.getCourseName() + " Already Exists."
-                      );
-
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Sorry! " +
+                        "The course with name " + updatedCourse.getCourseName() + " Already Exists.");
             }
 
             if (existingCourse.isPresent()) {

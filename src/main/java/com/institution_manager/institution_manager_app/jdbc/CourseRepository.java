@@ -82,14 +82,14 @@ DELETE FROM Course
     WHERE CourseId = ?
 """;
 
-    private static final String GET_ALL_COURSE_BY_ID_QUERY = """
+    private static final String GET_COURSE_BY_ID_QUERY = """
     SELECT * FROM Course
     WHERE CourseId = ?;
 """;
 
     private static final String UPDATE_COURSE_QUERY =
             """
-UPDATE Course SET CourseName = ? WHERE institution_id = ?
+UPDATE Course SET courseName = ? WHERE courseId = ?
 
 """;
 
@@ -202,7 +202,7 @@ UPDATE Course SET CourseName = ? WHERE institution_id = ?
     public Optional<Course> getCourseById(int id) {
         try {
             Course course = springJdbcTemplate.queryForObject(
-                    GET_ALL_COURSE_BY_ID_QUERY,
+                    GET_COURSE_BY_ID_QUERY,
                     new BeanPropertyRowMapper<>(Course.class),
                     id
             );
