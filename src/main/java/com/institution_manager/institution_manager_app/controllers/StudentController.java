@@ -68,6 +68,26 @@ public class StudentController
 
 
     //edit name of a student
+    @PatchMapping("/students/{id}")
+    public ResponseEntity<?> updateStudent(@PathVariable int id, @RequestBody Student updatedStudent)
+    {
+
+        try {
+            Optional<Student> existingStudent = studentRepo.getStudentById(id);
+
+
+            if (existingStudent.isPresent()) {
+
+                studentRepo.updateStudent(id, updatedStudent);
+
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.institution_manager.institution_manager_app.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -47,6 +48,16 @@ WHERE studentId = ?;
 
     private static final String DELETE_ENROLLMENT_QUERY = "DELETE FROM Enrollment WHERE studentId = ?";
 
+    private static final String GET_STUDENT_BY_ID_QUERY = """
+SELECT * FROM Student
+WHERE studentId = ?;
+""";
+
+    private static final String UPDATE_STUDENT_QUERY = """
+UPDATE Student SET studentName = ? WHERE studentId = ?
+
+""";
+
 
     public Student createStudent(int id, Student student)
     {
@@ -81,5 +92,26 @@ WHERE studentId = ?;
 
         springJdbcTemplate.update(DELETE_ENROLLMENT_QUERY, id);
         springJdbcTemplate.update(DELETE_STUDENT_QUERY, id);
+    }
+
+    public Optional<Student> getStudentById(int id)
+    {
+        try {
+            Student student = springJdbcTemplate.queryForObject(
+                    GET_STUDENT_BY_ID_QUERY,
+                    new BeanPropertyRowMapper<>(Student.class),
+                    id
+            );
+            return Optional.ofNullable(student);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+
+    public void updateStudent(int id, Student updatedStudent)
+    {
+        String newName = updatedStudent.getStudentName();
+        springJdbcTemplate.update(UPDATE_STUDENT_QUERY, newName, id);
     }
 }
