@@ -89,14 +89,35 @@ public class StudentController
 
     //list all students in each institution (show 10 students at a time)
     @GetMapping("/institutions/{id}/students")
-    public Optional<List<Student>> getStudentsByInstitution(@PathVariable int id)
-    {
+    public ResponseEntity<List<Student>> getStudentsByInstitution(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         System.out.println("GET all students by institution called");
 
-        return studentRepo.getAnInstitutionsStudents(id);
+        List<Student> students = studentRepo.getAnInstitutionsStudents(id, page, size);
+
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(students);
     }
 
+
     //search for a student in an institution
+    @PostMapping("students/institutions/{id}")
+    public Optional<Student> getStudentInInstitution(@PathVariable int id,
+                                                     @RequestBody Student student)
+    {
+        System.out.println("searching for student in the institution");
+
+        return studentRepo.getStudentInInstitutionByName(id, student);
+
+
+
+    }
 
 
     //filter list of students by course

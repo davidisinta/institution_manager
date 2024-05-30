@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,8 @@ JOIN Institution i ON s.institution_id = i.institution_id
 WHERE i.institution_id = ?
 
 """;
+
+    String GET_STUDENT_BY_NAME_QUERY = "SELECT * FROM Student WHERE institution_id = ? AND studentName = ?";
 
 
     public Student createStudent(int id, Student student)
@@ -123,14 +126,43 @@ WHERE i.institution_id = ?
         springJdbcTemplate.update(UPDATE_STUDENT_QUERY, newName, id);
     }
 
-    public Optional<List<Student>> getAnInstitutionsStudents(int id)
-    {
-        List<Student> students = springJdbcTemplate.query(
+    public List<Student> getAnInstitutionsStudents(int institutionId, int page, int size) {
+        // Validate page and size parameters
+        if (page < 1 || size < 1) {
+            throw new IllegalArgumentException("Page and size must be greater than 0");
+        }
+
+        List<Student> allStudents = springJdbcTemplate.query(
                 GET_INSTITUTIONS_STUDENTS_QUERY,
                 new BeanPropertyRowMapper<>(Student.class),
-                id
+                institutionId
         );
 
-        return students.isEmpty() ? Optional.empty() : Optional.of(students);
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, allStudents.size());
+
+        if (fromIndex >= allStudents.size()) {
+            return Collections.emptyList();
+        }
+
+        return allStudents.subList(fromIndex, toIndex);
     }
+
+    public Optional<Student> getStudentInInstitutionByName(int institutionId, Student student) {
+
+
+        List<Student> students = springJdbcTemplate.query(
+                GET_STUDENT_BY_NAME_QUERY,
+                new BeanPropertyRowMapper<>(Student.class),
+                institutionId,
+                student.getStudentName()
+        );
+
+        if (students.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(students.get(0));
+        }
+    }
+
 }
