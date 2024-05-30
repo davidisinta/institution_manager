@@ -1,6 +1,6 @@
 # Institution, Course, and Student Management API
 
-This project provides APIs for managing institutions, courses, and students. It includes functionalities for adding, listing, filtering, sorting, editing, and deleting institutions, courses, and students. Additionally, a simple UI or a POSTMAN collection is included for testing the APIs.
+This project provides APIs for managing institutions, courses, and students. It includes functionalities for adding, listing, filtering, sorting, editing, and deleting institutions, courses, and students.
 
 ## Features
 
