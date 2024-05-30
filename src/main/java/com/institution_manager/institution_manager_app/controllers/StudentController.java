@@ -121,6 +121,16 @@ public class StudentController
 
 
     //filter list of students by course
+    @GetMapping("/students/institutions/{institutionId}/courses/{courseId}")
+    public Optional<List<Student>> filterStudentsByCourse(@PathVariable("institutionId") int institutionId,
+                                                          @PathVariable("courseId") int courseId)
+    {
+
+        System.out.println("filtering students by course!!");
+
+        return studentRepo.getInstitutionsStudentsByCourse(institutionId,courseId);
+
+    }
 
 
 

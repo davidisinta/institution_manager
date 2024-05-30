@@ -69,6 +69,15 @@ WHERE i.institution_id = ?
 
     String GET_STUDENT_BY_NAME_QUERY = "SELECT * FROM Student WHERE institution_id = ? AND studentName = ?";
 
+    String GET_STUDENTS_BY_COURSE_QUERY = """
+    SELECT s.*
+    FROM Student s
+    JOIN Enrollment e ON s.studentId = e.studentId
+    JOIN InstitutionCourse ic ON e.courseId = ic.courseId
+    WHERE s.institution_id = ? AND ic.courseId = ?
+    """;
+
+
 
     public Student createStudent(int id, Student student)
     {
@@ -162,6 +171,25 @@ WHERE i.institution_id = ?
             return Optional.empty();
         } else {
             return Optional.of(students.get(0));
+        }
+    }
+
+    public Optional<List<Student>> getInstitutionsStudentsByCourse(int institutionId, int courseId) {
+
+
+        List<Student> students = springJdbcTemplate.query(
+                GET_STUDENTS_BY_COURSE_QUERY,
+                new BeanPropertyRowMapper<>(Student.class),
+                institutionId,
+                courseId
+        );
+
+        if (students.isEmpty()) {
+            System.out.println("no student takes this course");
+            return Optional.empty();
+        } else {
+            System.out.println("we have found some students taking this course");
+            return Optional.of(students);
         }
     }
 
