@@ -4,8 +4,12 @@ import com.institution_manager.institution_manager_app.jdbc.Course;
 import com.institution_manager.institution_manager_app.jdbc.Student;
 import com.institution_manager.institution_manager_app.jdbc.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -24,15 +28,27 @@ public class StudentController
 
     // add a student and assign them a course - this implies that you must enroll a student to
     //an institution before assigning them a course
-    @PostMapping("/create/student/institution/{id}")
-    public ResponseEntity<?> addStudentToInstitutionAndCourse(@PathVariable int id, @RequestBody Course course)
+    @PostMapping("/create/student/institution/{institution_id}/course/{course_id}")
+    public ResponseEntity<?> addStudentToInstitutionAndCourse(@PathVariable("institution_id") int institutionId,
+                                                              @PathVariable("course_id") int courseId,
+                                                              @RequestBody Student student)
     {
-        //create student and add them to an institution
-        Student student = studentRepo.createStudent();
+        // Create student and add them to an institution
+        Student createdStudent = studentRepo.createStudent(institutionId, student);
 
-        //assign student to a particular course
+        // Assign student to a particular course
+        studentRepo.enrollStudentToCourse(createdStudent, courseId);
 
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/students")
+    public Optional<List<Student>> getAllStudents()
+    {
+        System.out.println("get students called!!");
+        return studentRepo.getAllStudents();
+    }
+
 
 
     //delete a student

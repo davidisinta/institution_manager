@@ -8,8 +8,7 @@ public class Course
     public Course() {
 
     }
-    public Course(int courseId, String courseName) {
-        this.courseId = courseId;
+    public Course(String courseName) {
         this.courseName = courseName;
     }
 
