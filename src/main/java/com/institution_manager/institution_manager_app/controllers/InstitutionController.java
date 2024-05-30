@@ -134,7 +134,7 @@ public class InstitutionController
 
 
     // edit name of institution - update(PATCH)
-    @PatchMapping("/institutions/{id}")
+    @PatchMapping("/edit/institutions/{id}")
     public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
     {
 
