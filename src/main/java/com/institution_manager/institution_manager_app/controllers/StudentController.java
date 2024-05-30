@@ -65,8 +65,6 @@ public class StudentController
         }
     }
 
-
-
     //edit name of a student
     @PatchMapping("/students/{id}")
     public ResponseEntity<?> updateStudent(@PathVariable int id, @RequestBody Student updatedStudent)
