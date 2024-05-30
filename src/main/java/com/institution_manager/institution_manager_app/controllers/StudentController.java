@@ -4,6 +4,7 @@ import com.institution_manager.institution_manager_app.jdbc.Course;
 import com.institution_manager.institution_manager_app.jdbc.Student;
 import com.institution_manager.institution_manager_app.jdbc.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +51,25 @@ public class StudentController
     }
 
 
-
     //delete a student
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<?> deleteStudent(@PathVariable int id)
+    {
+
+        System.out.println("Delete student called!!");
+        try {
+            studentRepo.deleteStudentById(id);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
     //edit name of a student
+
+
 
     //change a course a student is doing within the same institution
 

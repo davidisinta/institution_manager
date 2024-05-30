@@ -116,7 +116,7 @@ public class CourseController
     // Delete a course - do not delete a course that has been assigned to atleast one student
     // show relevant errors if user tries to delete a course that has students assigned
     @DeleteMapping("/courses/{id}")
-    public ResponseEntity<?> deleteInstitution(@PathVariable int id)
+    public ResponseEntity<?> deleteCourse(@PathVariable int id)
     {
         //come back and check if course has a student before deleting
 

@@ -17,6 +17,7 @@ import java.util.Optional;
 public class StudentRepository {
 
 
+
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
@@ -37,6 +38,15 @@ VALUES (?, ?);
 
 
 """;
+
+    private static final String DELETE_STUDENT_QUERY = """
+DELETE FROM Student
+WHERE studentId = ?;
+
+""";
+
+    private static final String DELETE_ENROLLMENT_QUERY = "DELETE FROM Enrollment WHERE studentId = ?";
+
 
     public Student createStudent(int id, Student student)
     {
@@ -64,5 +74,12 @@ VALUES (?, ?);
     {
         return Optional.of(springJdbcTemplate.query(GET_ALL_STUDENTS_QUERY, new BeanPropertyRowMapper<>(Student.class)));
 
+    }
+
+    public void deleteStudentById(int id)
+    {
+
+        springJdbcTemplate.update(DELETE_ENROLLMENT_QUERY, id);
+        springJdbcTemplate.update(DELETE_STUDENT_QUERY, id);
     }
 }
