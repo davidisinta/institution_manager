@@ -87,6 +87,8 @@ WHERE i.institution_id = ?
     String UPDATE_COURSE_QUERY = "UPDATE Enrollment SET courseId = ? WHERE studentId = ?";
 
 
+    private static final String GET_COURSES_STUDENTS_QUERY = "SELECT s.studentId, s.studentName FROM Student s JOIN Enrollment e ON s.studentId = e.studentId WHERE e.courseId = ?";
+
 
     public Student createStudent(int id, Student student)
     {
@@ -284,4 +286,15 @@ WHERE i.institution_id = ?
         }
     }
 
+    public Optional<List<Student>> getCoursesStudents(int courseId)
+    {
+        List<Student> students = springJdbcTemplate.query(
+                GET_COURSES_STUDENTS_QUERY,
+                new BeanPropertyRowMapper<>(Student.class),
+                courseId
+        );
+
+        return students.isEmpty() ? Optional.empty() : Optional.of(students);
+
+    }
 }

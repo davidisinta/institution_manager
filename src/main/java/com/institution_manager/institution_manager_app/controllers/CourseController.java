@@ -1,13 +1,11 @@
 package com.institution_manager.institution_manager_app.controllers;
 
-import com.institution_manager.institution_manager_app.jdbc.CourseRepository;
-import com.institution_manager.institution_manager_app.jdbc.Institution;
+import com.institution_manager.institution_manager_app.jdbc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.institution_manager.institution_manager_app.jdbc.Course;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +15,9 @@ public class CourseController
 {
     @Autowired
     private CourseRepository repo;
+
+    @Autowired
+    private StudentRepository studentRepo;
 
 
 
@@ -120,13 +121,32 @@ public class CourseController
     {
         //come back and check if course has a student before deleting
 
-        System.out.println("Delete course called!!");
-        try {
-            repo.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.notFound().build();
+
+        Optional<List<Student>> potentialStudents = studentRepo.getCoursesStudents(id);
+
+        if(potentialStudents.isPresent()){
+            System.out.println("Course not deleted because it has students");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Institution not " +
+                    "deleted because there is a course" +
+                    "assigned to it");
         }
+
+        else{
+
+            System.out.println("Course deleted");
+            try {
+                repo.deleteById(id);
+                return ResponseEntity.ok().build();
+            } catch (EmptyResultDataAccessException ex) {
+                return ResponseEntity.notFound().build();
+            }
+
+        }
+
+
+
+
+
     }
 
 

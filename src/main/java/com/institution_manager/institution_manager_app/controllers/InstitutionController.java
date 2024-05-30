@@ -103,7 +103,6 @@ public class InstitutionController
     @DeleteMapping("/institutions/{id}")
     public ResponseEntity<?> deleteInstitution(@PathVariable int id)
     {
-        //come back and check if institution has a course before deleting
         System.out.println("Delete institution called!!");
 
         Optional<List<Course>> potentialCourses = courseRepo.getAnInstitutionsCourses(id);
