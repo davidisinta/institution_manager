@@ -1,5 +1,7 @@
 package com.institution_manager.institution_manager_app.controllers;
 
+import com.institution_manager.institution_manager_app.jdbc.Course;
+import com.institution_manager.institution_manager_app.jdbc.CourseRepository;
 import com.institution_manager.institution_manager_app.jdbc.Institution;
 import com.institution_manager.institution_manager_app.jdbc.InstitutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class InstitutionController
 
     @Autowired
     private InstitutionRepository repo;
+
+    @Autowired
+    private CourseRepository courseRepo;
 
     //add a new institution - create(POST)
     @PostMapping("/institution/create")
@@ -99,14 +104,32 @@ public class InstitutionController
     public ResponseEntity<?> deleteInstitution(@PathVariable int id)
     {
         //come back and check if institution has a course before deleting
-
         System.out.println("Delete institution called!!");
-        try {
-            repo.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.notFound().build();
+
+        Optional<List<Course>> potentialCourses = courseRepo.getAnInstitutionsCourses(id);
+
+        if(potentialCourses.isPresent()){
+            System.out.println("Institution not deleted because there is a course" +
+                    "assigned to it");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Institution not " +
+                    "deleted because there is a course" +
+                    "assigned to it");
         }
+        else{
+
+            System.out.println("Institution deleted!! ");
+
+            try {
+                repo.deleteById(id);
+                return ResponseEntity.ok().build();
+            } catch (EmptyResultDataAccessException ex) {
+                return ResponseEntity.notFound().build();
+            }
+
+        }
+
+
+
     }
 
 
@@ -114,9 +137,6 @@ public class InstitutionController
     @PatchMapping("/institutions/{id}")
     public ResponseEntity<?> updateInstitution(@PathVariable int id, @RequestBody Institution updatedInstitution)
     {
-        //come back and check if there is an institution with the new name you want to assign first
-        // before performing the edit
-
 
         try {
             Optional<Institution> existingInstitution = repo.getInstitution(id);
