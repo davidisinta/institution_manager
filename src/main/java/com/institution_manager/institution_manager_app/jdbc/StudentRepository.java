@@ -23,6 +23,9 @@ public class StudentRepository {
     @Autowired
     private JdbcTemplate springJdbcTemplate;
 
+    @Autowired
+    private CourseRepository courseRepo;
+
     private static final String CREATE_STUDENT_QUERY = """
 INSERT INTO Student (studentName, institution_id)
 VALUES (?,?);
@@ -76,6 +79,8 @@ WHERE i.institution_id = ?
     JOIN InstitutionCourse ic ON e.courseId = ic.courseId
     WHERE s.institution_id = ? AND ic.courseId = ?
     """;
+
+    String CHANGE_STUDENT_COURSE_QUERY = "UPDATE Enrollment SET courseId = ? WHERE studentId = ?";
 
 
 
@@ -190,6 +195,41 @@ WHERE i.institution_id = ?
         } else {
             System.out.println("we have found some students taking this course");
             return Optional.of(students);
+        }
+    }
+
+    public void changeStudentCourse(int studentId, int courseId) {
+
+
+        int rowsAffected = springJdbcTemplate.update(CHANGE_STUDENT_COURSE_QUERY, courseId, studentId);
+
+        if (rowsAffected > 0) {
+            System.out.println("Course changed successfully for studentId: " + studentId);
+        } else {
+            System.out.println("No enrollment found for studentId: " + studentId);
+        }
+    }
+
+
+
+    public Optional<Course> searchCourseByName(String courseName, int studentId) {
+        try {
+
+            Optional<Student> currStudent = getStudentById(studentId);
+
+            if (currStudent.isPresent()) {
+                Student stu = currStudent.get();
+                int institutionId = stu.getInstitution_id();
+
+                return courseRepo.searchCourseByInstitution(courseName, institutionId);
+            } else {
+                System.out.println("Student with ID " + studentId + " not found.");
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while searching for the course: " + e.getMessage());
+            return Optional.empty();
         }
     }
 

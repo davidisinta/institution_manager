@@ -132,15 +132,25 @@ public class StudentController
 
     }
 
-
-
-
-
-
-
-
-
     //change a course a student is doing within the same institution
+    @PostMapping("/students/{id}/change/course")
+    public ResponseEntity<String> changeStudentCourse(@PathVariable int id, @RequestBody Course course) {
+        // Check if course exists in the institution
+        Optional<Course> potentialCourse = studentRepo.searchCourseByName(course.getCourseName(), id);
+
+        // If the course exists, effect the change
+        if (potentialCourse.isPresent()) {
+            int courseId = potentialCourse.map(Course::getCourseId)
+                    .orElseThrow(() -> new IllegalStateException("Course ID not available"));
+            studentRepo.changeStudentCourse(id, courseId);
+            return ResponseEntity.ok("Course changed successfully");
+        } else {
+            // If the course doesn't exist, return an error message
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found");
+        }
+    }
+
+
 
 
     //transfer student to another institution and assign them a course
