@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 public class StudentRepository {
     @Autowired
     private JdbcTemplate springJdbcTemplate;
+
+    public Student createStudent() {
+    }
 }
