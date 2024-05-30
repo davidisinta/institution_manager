@@ -58,6 +58,14 @@ UPDATE Student SET studentName = ? WHERE studentId = ?
 
 """;
 
+    private static final String GET_INSTITUTIONS_STUDENTS_QUERY = """
+SELECT s.*
+FROM Student s
+JOIN Institution i ON s.institution_id = i.institution_id
+WHERE i.institution_id = ?
+
+""";
+
 
     public Student createStudent(int id, Student student)
     {
@@ -113,5 +121,16 @@ UPDATE Student SET studentName = ? WHERE studentId = ?
     {
         String newName = updatedStudent.getStudentName();
         springJdbcTemplate.update(UPDATE_STUDENT_QUERY, newName, id);
+    }
+
+    public Optional<List<Student>> getAnInstitutionsStudents(int id)
+    {
+        List<Student> students = springJdbcTemplate.query(
+                GET_INSTITUTIONS_STUDENTS_QUERY,
+                new BeanPropertyRowMapper<>(Student.class),
+                id
+        );
+
+        return students.isEmpty() ? Optional.empty() : Optional.of(students);
     }
 }

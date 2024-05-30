@@ -87,6 +87,26 @@ public class StudentController
         }
     }
 
+    //list all students in each institution (show 10 students at a time)
+    @GetMapping("/institutions/{id}/students")
+    public Optional<List<Student>> getStudentsByInstitution(@PathVariable int id)
+    {
+        System.out.println("GET all students by institution called");
+
+        return studentRepo.getAnInstitutionsStudents(id);
+    }
+
+    //search for a student in an institution
+
+
+    //filter list of students by course
+
+
+
+
+
+
+
 
 
     //change a course a student is doing within the same institution
@@ -94,10 +114,9 @@ public class StudentController
 
     //transfer student to another institution and assign them a course
 
-    //list all students in each institution (show 10 students at a time)
-
-    //search for a student in an institution
 
 
-    //filter list of students by course
+
+
+
 }
